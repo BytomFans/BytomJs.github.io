@@ -1,2 +1,2 @@
-# BytomJs.github.io
-bytom js sdk document
+# BytomJava.github.io
+bytom java sdk document
