@@ -35,13 +35,20 @@ Optional:
 -  `Array of Object` -  *xpubs*, 公钥数组
 
 #### 例子
-```php
-$client = BytomClient::createAccount($root_xpubs = [], $alias, $quorum = 1);
-console_($client);
+```js
+const accountPromise = keyPromise.then(key => {
+client.accounts.create({
+    alias: 'alice', 
+    root_xpubs: [key.xpub], 
+    quorum: 1 
+})
+})
+var sync = accountPromise.then((res) => console.log(res)) 
 ```
 
-```json
-// Result
+```js
+$ node test.js
+//response
 {
   "alias": "alice",
   "id": "08FO663C00A02",
@@ -69,15 +76,13 @@ none
 #### 例子
 
 ```php
-$bytom = new BytomClient();
-$res = $bytom->listAccounts();   //实例化一个对象
-$this->assertEquals(200, $res->getHTTPStatus());//判断请求状态是否为200，是则为成功
-$data = $this->assertTrue($res->isSucceeded());
-console_($data);
+const keyPromise = client.accounts.listAll()
+var sync = keyPromise.then((res) => console.log(res))
 ```
 
 ```json
-// Result
+$ node test.js
+//response
 [
   {
     "alias": "alice",
@@ -110,15 +115,21 @@ console_($data);
 - `String` - *account_alias*, 账户别名
 - `String` - *new_alias*，账户的新别名 
 #### 返回
-如果账户别名更新成功，status为success。
+如果账户别名更新成功则返回为空。
 #### 例子
-```php
-\\\\\
+```js
+const keyPromise = client.accounts.updateAlias({
+    account_id:'0RADLP61G0A02',
+    account_alias:'account',
+    new_alias:'account123'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 
 ```json
-// Result
-{"status":"success"}
+$ node test.js
+//response
+//none
 ```
 
 ## delete-account
@@ -130,10 +141,13 @@ console_($data);
 #### 返回
 如果账户已成功删除，则为none
 #### 例子
-```php
-$client = BytomClient::deleteAccount($account_info);
+```js
+const keyPromise = client.accounts.delete({account_id:'0RADP6RBG0A04'})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```json
+$ node test.js
+//response
 //none
 ```
 ## create-account-receiver
@@ -141,20 +155,26 @@ $client = BytomClient::deleteAccount($account_info);
 #### 参数
 `Object`: *account_alias | account_id*, 账户别名或账户id
 可选：
+
 - `String` - *account_alias*, 账户别名
 - `String` - *account_id*, 账户id
 #### 返回
 - `String` - *address*, 账户地址
 - `String` - *control_program*, 账户的控制程序
 #### 例子
-```php
-$client = BytomClient::createAccountReceiver($account_alias, $account_id);
+```js
+const keyPromise = client.accounts.createReceiver({
+    account_alias:'account',
+    account_id:'0RADLP61G0A02'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```json
-// Result
-{
-    "address": "bm1q5u8u4eldhjf3lvnkmyl78jj8a75neuryzlknk0",
-    "control_program": "0014a70fcae7edbc931fb276d93fe3ca47efa93cf064"
+$ node test.js
+//response
+{ 
+  control_program: '0014b0cef0bdbe6551c62fb37993593f1ec4d8051396',
+  address: 'bm1qkr80p0d7v4guvtan0xf4j0c7cnvq2yukd43ynj' 
 }
 ```
 
@@ -176,11 +196,16 @@ $client = BytomClient::createAccountReceiver($account_alias, $account_id);
 
 ####  例子
 
-```php
-BytomClient::listAddresses($account_alias, $account_id);
+```js
+const keyPromise = client.accounts.listAddresses({
+    account_alias:'alice',
+    account_id:'086KQD75G0A02'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```json
-// Result
+$ node test.js
+//response
 [
   {
     "account_alias": "alice",
@@ -219,12 +244,16 @@ BytomClient::listAddresses($account_alias, $account_id);
 
 #### 例子
 
-```php
-BytomClient::validateAddress($address);
+```js
+const keyPromise = client.accounts.validateAddresses({
+    address: 'bm1qkr80p0d7v4guvtan0xf4j0c7cnvq2yukd43ynj'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 
 ```json
-// Result
+$ node test.js
+// response
 {
    "vaild": true,
    "is_local": true,

@@ -20,11 +20,17 @@ sidebar_label: Bytom.Message.API
 - `String` - *signature*, 消息的签名.
 
 #### 例子
-```php
-BytomClient::signMessage($address, $message, $password);
+```js
+const keyPromise = client.status.signMessage({
+    address:'bm1qkr80p0d7v4guvtan0xf4j0c7cnvq2yukd43ynj', 
+    message:'this is a test message', 
+    password:'123456'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$node test.js
+//response
 {
   "signature": "74da3d6572233736e3a439166719244dab57dd0047f8751b1efa2da26eeab251d915c1211dcad77e8b013267b86d96e91ae67ff0be520ef4ec326e911410b609",
   "derived_xpub": "6ff8c3d1321ce39a3c3550f57ba70b67dcbcef821e9b85f6150edb7f2f3f91009e67f3075e6e76ed5f657ee4b1a5f4749b7a8c74c8e7e6a1b0e5918ebd5df4d0"
@@ -50,11 +56,18 @@ BytomClient::signMessage($address, $message, $password);
 - `Boolean` - *result*, 验证结果.
 
 #### 例子
-```php
-BytomClient::verifyMessage($address, $derived_xpub, $message, $signature);
+```js
+const keyPromise = client.status.verifyMessage({
+    address:'bm1qx2qgvvjz734ur8x5lpfdtlau74aaa5djs0a5jn', 
+    derived_xpub:'6ff8c3d1321ce39a3c3550f57ba70b67dcbcef821e9b85f6150edb7f2f3f91009e67f3075e6e76ed5f657ee4b1a5f4749b7a8c74c8e7e6a1b0e5918ebd5df4d0', 
+    message:'this is a test message', 
+    signature:'74da3d6572233736e3a439166719244dab57dd0047f8751b1efa2da26eeab251d915c1211dcad77e8b013267b86d96e91ae67ff0be520ef4ec326e911410b609'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$node test.js
+//response
 {
   "result": true
 }

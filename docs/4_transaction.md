@@ -50,12 +50,16 @@ sidebar_label: Bytom.Transaction.API
 
 #### 例子
 
-```php
-BytomClient::getTransaction($tx_id);
+```js
+const keyPromise = client.transactions.list({
+    tx_id: "15b8d66e227feff47b3de0f278934ea16d6c828371ec6c13c8f84713dd11703b"
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 
 ```js
-// Result
+$ node test.js
+//response
 {
   "block_hash": "1fa9bb389cf974a9b37b63ca38c0cf3453c30f394b9e8ae7f04f2d1b52c329b4",
   "block_height": 530,
@@ -204,12 +208,14 @@ BytomClient::getTransaction($tx_id);
 #### 例子
 
 列出所有可用的交易：
-```php
-BytomClient::listTransactions();
+```js
+const keyPromise = client.transactions.listAll()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 
 ```js
-// Result
+$ node test.js
+//response
 [
   {
     "block_time": 1521771059,
@@ -267,8 +273,18 @@ BytomClient::listTransactions();
 ]
 ```
 列出与给定tx_id匹配的事务详细信息：
+
 ```js
-// Result
+const keyPromise = client.unspentOutputs.list({
+    id: '1b2d0efa025256603e9330273d37f5a900cd3dfb213e015ac53cf645e2315a6d',
+    detail: true
+})
+var sync = keyPromise.then((res) => console.log(res)) 
+```
+
+```js
+$ node test.js
+//response
 [
   {
     "block_hash": "1b2d0efa025256603e9330273d37f5a900cd3dfb213e015ac53cf645e2315a6d",
@@ -343,7 +359,17 @@ BytomClient::listTransactions();
 列出与给定account_id和未确认标志匹配的标签（未确认标签的block_hash，block_height和block_index默认为零）：
 
 ```js
-// Result
+const keyPromise = client.unspentOutputs.list({
+    account_id: '0F1MQVI500A02',
+    unconfirmed: true,
+    detail: true
+})
+var sync = keyPromise.then((res) => console.log(res)) 
+```
+
+```js
+$ node test.js
+//response
 [
   {
     "block_hash": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -567,10 +593,40 @@ BytomClient::listTransactions();
 #### 返回
 - `Object of build-transaction` -  *transaction*, 构建好的交易..
 #### 例子
-```php
-BytomClient::buildTransaction($actions = [], $base_transaction = null, $ttl = 0);
+```js
+//首先创建一个交易
+const buildPromise = Promise.all([
+  accountPromise,
+  addressPromise,
+  assetPromise]
+  ).then(([account, address, asset]) => {
+  const issueAction = {
+    amount: 100000000,
+    asset_alias: asset.alias,
+  }
+
+  const gasAction = {
+    account_alias: account.alias,
+    asset_alias: 'BTM',
+    amount: 50000000
+  }
+
+  const controlAction = {
+    amount: 100000000,
+    asset_alias: asset.alias,
+    address: address.address
+  }
+  
+  return client.transactions.build(builder => {
+      builder.issue(issueAction)
+      builder.spendFromAccount(gasAction)
+      builder.controlWithAddress(controlAction)
+  })
+})
 ```
 ```js
+$ node test.js
+// response
 {
   "allow_additional_actions": false,
   "local": true,
@@ -646,12 +702,18 @@ BytomClient::buildTransaction($actions = [], $base_transaction = null, $ttl = 0)
 
 #### 例子
 
-```php
-BytomClient::signTransaction($password, $transaction);
+```js
+const signPromise = buildPromise.then(transactionTemplate => {
+  return client.transactions.sign({
+    transaction: transactionTemplate, 
+    password: 'password'
+  })
+})
 ```
 
 ```js
-// Result
+$ node test.js
+// response
 {
   "sign_complete": true,
   "transaction": {
@@ -727,11 +789,13 @@ BytomClient::signTransaction($password, $transaction);
 - `String` - *tx_id*, 交易id 交易hash.
 
 #### 例子
-```php
-BytomClient::submitTransaction($raw_transaction);
+```js
+signPromise.then(signed => {
+  return client.transactions.submit(signed.transaction.raw_transaction)
+})
 ```
 ```js
-// Result
+// response
 {
   "tx_id": "2c0624a7d251c29d4d1ad14297c69919214e78d995affd57e73fbf84ece316cb"
 }
@@ -752,11 +816,34 @@ BytomClient::submitTransaction($raw_transaction);
 - `Integer` - *vm_neu*, 虚拟机执行消耗的neu.
 
 ##### 例子
-```php
-BytomClient::estimateTransactionGas($transaction_template);
+```js
+const keyPromise = client.transactions.estimateGas({
+    transaction_template:{
+        allow_additional_actions:false,
+        raw_transaction:'070100010161015ffe8a1209937a6a8b22e8c01f056fd5f1730734ba8964d6b79de4a639032cecddffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8099c4d59901000116001485eb6eee8023332da85df60157dc9b16cc553fb2010002013dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80afa08b4f011600142b4fd033bc76b4ddf5cb00f625362c4bc7b10efa00013dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8090dfc04a011600146eea1ce6cfa5b718ae8094376be9bc1a87c9c82700',
+        signing_instructions:[{
+            position:0,
+            witness_components:[{
+                keys:[{
+                    derivation_path:['010100000000000000','0100000000000000'],
+                    xpub:'cb4e5932d808ee060df9552963d87f60edac42360b11d4ad89558ef2acea4d4aaf4818f2ebf5a599382b8dfce0a0c798c7e44ec2667b3a1d34c61ba57609de55'
+                }],
+                quorum:1,
+                signatures:null,
+                type:'raw_tx_signature'
+            },
+            {
+                type:'data',
+                value:'1c9b5c1db7f4afe31fd1b7e0495a8bb042a271d8d7924d4fc1ff7cf1bff15813'
+            }
+        ]}
+    ]}
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$ node test.js
+// response
 {
   "storage_neu": 3840000,
   "total_neu": 5259000,
@@ -784,11 +871,15 @@ BytomClient::estimateTransactionGas($transaction_template);
 - `Array of Object` - *outputs*, 交易输出对象(输出结构请参考get-transction API描述).
 
 #### 例子
-```php
-BytomClient::getUnconfirmedTransaction($tx_id);
+```js
+const keyPromise = client.transactions.list({
+    tx_id: "382090f24fbfc2f737fa7372b9d161a43f00d1c597a7130a56589d1f469d04b5"
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$ node test.js
+// response
 {
   "id": "382090f24fbfc2f737fa7372b9d161a43f00d1c597a7130a56589d1f469d04b5",
   "inputs": [
@@ -846,11 +937,13 @@ none
 - `Array of Object` - *tx_ids*, 列出所有交易id.
 
 #### 例子
-```php
-BytomClient::listUnconfirmedTransactions()
+```js
+const keyPromise = client.transactions.listAll()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$ node test.js
+// response
 {
   "total": 2,
   "tx_ids": [
@@ -878,9 +971,6 @@ BytomClient::listUnconfirmedTransactions()
 - `Array of Object` - *outputs*, 交易输出对象(输出结构请参考get-transction API描述).
 
 #### 例子
-```php
-BytomClient::decodeRawTransaction($raw_transaction)
-```
 ```js
 // Result
 {

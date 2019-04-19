@@ -24,19 +24,19 @@ optional:
 - `Object` - *created_at*, token创建时间.
 
 ##### 例子
-```php
-BytomClient::createAccessToken($token_id);
+```js
+const keyPromise = client.accessTokens.create({
+    id:'token1'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Request
-curl -X POST create-access-token -d '{"id":"token1"}'
-
-// Result
-{
-  "token": "token1:1fee70f537128a201338bd5f25a3adbf33dad02eae4f4c9ac43f336a069df8f3",
-  "id": "token1",
-  "created_at": "2018-03-20T18:56:01.043919771+08:00"
-}
+$ node test.js
+//response
+{ id: 'token1',
+  token:
+   'token1:d15b6975281ba2f9201976b1f7c8f2b3d4c2bf3d9589f14e2c56882d32f5dd83',
+  created_at: '2019-04-18T15:39:26.3583019+08:00' }
 ```
 
 ## list-access-tokens
@@ -59,11 +59,13 @@ none
 ##### 例子
 
 列出所有可用的access token。
-```php
-BytomClient::listAccessTokens();
+```js
+const keyPromise = client.accessTokens.listAll()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$ node test.js
+//response
 [
   {
     "token": "token1:1fee70f537128a201338bd5f25a3adbf33dad02eae4f4c9ac43f336a069df8f3",
@@ -95,11 +97,15 @@ BytomClient::listAccessTokens();
 #### 例子
 
 删除access token
-```php
-BytomClient::deleteAccessToken($token_id);
+```js
+const keyPromise = client.accessTokens.delete({
+   id:'token1'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$ node test.js
+//response
 //none
 ```
 
@@ -122,8 +128,12 @@ BytomClient::deleteAccessToken($token_id);
 #### 例子
 
 检查access token是否有效。
-```php
-BytomClient::checkAccessToken($token_id, $secret);
+```js
+const keyPromise = client.accessTokens.check({
+     id:'token1',
+    secret: '1fee70f537128a201338bd5f25a3adbf33dad02eae4f4c9ac43f336a069df8f3'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
 // Result

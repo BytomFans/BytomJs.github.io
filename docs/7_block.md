@@ -17,14 +17,14 @@ none
 - `Integer` - *block_count*, 当前的区块高度.
 
 #### 例子
-```php
-BytomClient::getBlockCount();
+```js
+const keyPromise = client.block.getBlockCount()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-{
-    "block_count": 519
-}
+$ node test.js
+//response
+{ block_count: 217520 }
 ```
 
 ## get-block-hash
@@ -40,13 +40,16 @@ none
 - `String` - *block_hash*, 最近的区块hash.
 
 #### 例子
-```php
-BytomClient::getBlockHash();
+```js
+const keyPromise = client.block.getBlockHash()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-{
-  "block_hash": "997bf5cecb4df097991a7a121a7fd3cb5a404fa856e3d6032c791ac07bc7c74c"
+$ node test.js
+//response
+$ node test.js
+{ 
+    block_hash:'c4f5e0214f5f46f2de4022dfca4976c4c4d0078eb0f434f83ffdd8999648e4df' 
 }
 ```
 
@@ -135,54 +138,42 @@ BytomClient::getBlockHash();
 #### 例子
 
 通过block_hash或block_height获取指定的块信息，如果两者都存在，则块结果通过哈希查询。
-```php
-BytomClient::getBlock($block_hash, $block_height);
+```js
+const keyPromise = client.block.getBlock({
+    block_height: 217521, 
+    block_hash: 'c4f5e0214f5f46f2de4022dfca4976c4c4d0078eb0f434f83ffdd8999648e4df'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-{
-  "bits": 2305843009222082600,
-  "difficulty": "5549086336",
-  "hash": "886a8e85b275e7d65b569ba510875c0e63dece1a94569914d7624c0dac8002f9",
-  "height": 43,
-  "nonce": 3,
-  "previous_block_hash": "2c72ccbd53b92a4f9423c5b610b4e106bbe8fbf3ecf2e16a1266b17ee323ff9d",
-  "size": 386,
-  "timestamp": 1521614189,
-  "transaction_merkle_root": "77d40262cfeca3a16d4587132974552ef00951e43ce567a26801ebc3dbdb4d96",
-  "transaction_status_hash": "53c0ab896cb7a3778cc1d35a271264d991792b7c44f5c334116bb0786dbc5635",
-  "transactions": [
-    {
-      "id": "4576b1b1ec251da3263dbdd5486bcbf9a1cd1f712172dbe7a7a5fe46ab194629",
-      "inputs": [
-        {
-          "amount": 0,
-          "arbitrary": "09",
-          "asset_definition": "7b7d",
-          "asset_id": "0000000000000000000000000000000000000000000000000000000000000000",
-          "type": "coinbase"
-        }
-      ],
-      "mux_id": "2383cefe8a34ea5810cc0706f2cf8cf08a106f90fc3eb3441f723cecdbc61331",
-      "outputs": [
-        {
-          "address": "sm1q4pkg8msjumtep7ecsdzuct3tsuzk5pmnm3p8nr",
-          "amount": 624000000000,
-          "asset_definition": "7b7d",
-          "asset_id": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-          "control_program": "0014f3403bcd8b443d03882a280b50f6f98986e1a255",
-          "id": "da87b40854a9b93be72ecdc24fe7bb03986ea3530e344b0f918f0788c3d83717",
-          "position": 0,
-          "type": "control"
-        }
-      ],
-      "size": 77,
-      "status_fail": false,
-      "time_range": 0,
-      "version": 1
-    }
-  ],
-  "version": 1
+$ node test.js
+//response
+{ 
+  hash:'c4f5e0214f5f46f2de4022dfca4976c4c4d0078eb0f434f83ffdd8999648e4df',
+  size: 416,
+  version: 1,
+  height: 217521,
+  previous_block_hash:
+   '36b6b386ab8a0d31e50f63cd4cc7d1a856c37772e199b4490c58939ceb66d9cf',
+  timestamp: 1555574169,
+  nonce: 936937894344669600,
+  bits: 2017612633064242700,
+  difficulty: '31878122073',
+  transaction_merkle_root:
+   '47091250d24330e5b7d5964579600accd792821ae9051a8d10dffe5cc693c290',
+  transaction_status_hash:
+   'c9c377e5192668bc0a367e4a4764f11e7c725ecced1d7b6a492974fab1b6d5bc',
+  transactions:
+   [ { id:
+        'cc074284c301a97d0c73f1c3081768b9b0ce1e872c99a0c497ef632dc7a47646',
+       version: 1,
+       size: 82,
+       time_range: 0,
+       inputs: [Array],
+       outputs: [Array],
+       status_fail: false,
+       mux_id:
+        '001f63a7e82991a574c5bdcd09f8cac4a75cd100b3d4b82cb2d87341df66e3b8' } ] 
 }
 ```
 
@@ -205,15 +196,25 @@ BytomClient::getBlock($block_hash, $block_height);
 - `Integer` - *reward*, 区块奖励.
 
 #### 例子
-```php
-BytomClient::getBlockHeader($block_hash, $block_height);
+```js
+const keyPromise = client.block.getBlockHeader({
+    block_height: 217521, 
+    block_hash: 'c4f5e0214f5f46f2de4022dfca4976c4c4d0078eb0f434f83ffdd8999648e4df'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$ node test.js
+//response
 {
-  "block_header": "01019601e87da37e7d73f31d54304c719c9058ec7bc7de7819deda89a7c8834a99bc05b8fbdbe6d60540eba9e5d5cb79fd87b3c0fad32f6772c1e4483f2a070e093a6176d85226d986a8c9c377e5192668bc0a367e4a4764f11e7c725ecced1d7b6a492974fab1b6d5bc00ad918480808080801e",
-  "reward": 41250000000
+    block_header:
+   '0101b1a30d36b6b386ab8a0d31e50f63cd4cc7d1a856c37772e199b4490c58939ceb66d9cf99
+dbe0e5054047091250d24330e5b7d5964579600accd792821ae9051a8d10dffe5cc693c290c9c377
+e5192668bc0a367e4a4764f11e7c725ecced1d7b6a492974fab1b6d5bc85f39088d081ab800db9fb
+8981808080801c',
+  reward: 41250000000 
 }
+
 ```
 
 ## get-difficulty
@@ -235,16 +236,22 @@ BytomClient::getBlockHeader($block_hash, $block_height);
 ##### 例子
 
 为当前块或指定的块散列/高度获取困难。
-```php
-BytomClient::getDifficulty($block_hash, $block_height);
+```js
+const keyPromise = client.block.getDifficulty({
+    block_height: 217521, 
+    block_hash: 'c4f5e0214f5f46f2de4022dfca4976c4c4d0078eb0f434f83ffdd8999648e4df'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-{
-  "bits": 2161727821137910500,
-  "difficulty": "15154807",
-  "hash": "d1fce60caea5466eae2b812e4586b55120c52aca27b6c92bd7c51e9cda82dcdf",
-  "height": 506
+$ node test.js
+//response
+{ 
+   hash:
+   'c4f5e0214f5f46f2de4022dfca4976c4c4d0078eb0f434f83ffdd8999648e4df',
+  height: 217521,
+  bits: 2017612633064242700,
+  difficulty: '31878122073' 
 }
 ```
 
@@ -266,15 +273,23 @@ BytomClient::getDifficulty($block_hash, $block_height);
 #### 例子
 
 获取当前块或指定块散列/高度的哈希率。
-```php
-BytomClient::getHashRate($block_hash, $block_height);
+```js
+const keyPromise = client.block.getHashRate({
+    block_height: 217521, 
+    block_hash: 'c4f5e0214f5f46f2de4022dfca4976c4c4d0078eb0f434f83ffdd8999648e4df'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-{
-  "hash": "d1fce60caea5466eae2b812e4586b55120c52aca27b6c92bd7c51e9cda82dcdf",
-  "hash_rate": 7577403,
-  "height": 506
+$ node test.js
+//response
+{ 
+  hash:
+   'c4f5e0214f5f46f2de4022dfca4976c4c4d0078eb0f434f83ffdd8999648e4df',
+  height: 217521,
+  hash_rate: 203045363 
 }
+
+
 ```
 

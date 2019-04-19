@@ -18,11 +18,13 @@ none
 - `Boolean` - *is_mining*, 节点是否启动了挖矿.
 
 #### 例子
-```php
-BytomClient::isMining();
+```js
+const keyPromise = client.status.isMining()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$node test.js
+//response
 {
   "is_mining": true
 }
@@ -37,10 +39,14 @@ BytomClient::isMining();
 - `Boolean` - *is_mining*, 节点是否启动了挖矿.
 
 #### 例子
-```php
-BytomClient::setMining();
+```js
+const keyPromise = client.status.setMining({
+    is_mining: true
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$node test.js
+//response
 //none
 ```

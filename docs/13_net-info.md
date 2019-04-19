@@ -26,19 +26,27 @@ none
 - `String` - *version*, 比原版本.
 
 #### 例子
-```php
-BytomClient::netInfo();
+```js
+const keyPromise = client.status.netInfo()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-{
-  "listening": true,
-  "syncing": true,
-  "mining": true,
-  "peer_count": 0,
-  "current_block": 627,
-  "highest_block": 0,
-  "network_id": "mainnet",
-  "version": "0.5.0"
+$node test.js
+//response
+{ 
+  listening: true,
+  syncing: false,
+  mining: true,
+  peer_count: 4,
+  current_block: 217559,
+  highest_block: 217559,
+  network_id: 'mainnet',
+  version_info:
+   { 
+     version: '1.0.8+56443ac4',
+     update: 0,
+     new_version: '1.0.8+56443ac4' 
+   } 
 }
 ```
+

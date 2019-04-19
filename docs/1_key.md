@@ -21,20 +21,24 @@ sidebar_label: Bytom.Key.API
 
 - `String` - *file* , 私钥文件在本地的存放路径
 #### 例子
-```php
-$alias = 'alice';
-$pwd = '123456';
-//调用BytomClient类下的createKey方法，传入alias和password两个参数
-$client = BytomClient::createKey($alias, $password); 
-console_($client);
+```js
+const client = new bytom.Client(url, accessToken)
+const keyPromise = client.keys.create({ 
+    alias:'alice', 
+    password: '123456'
+   })
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```json
-// Result
-{
-  "alias": "alice",
-  "xpub": "a7dae957c2d35b42efe7e6871cf5a75ebd2a0d0e51caffe767db42d3e6d69dbe211d1ca492ecf05908fe6fa625ad61b3253375ea744c9442dd5551613ba50aea",
-  "file": "/Path/To/Library/Bytom/keystore/UTC--2018-04-22T06-30-27.609315219Z--0e34293c-8856-4f5f-b934-37456a3820fa"
-}
+$ node test.js
+//response
+[
+  {
+      "alias": "alice",
+      "xpub": "a7dae957c2d35b42efe7e6871cf5a75ebd2a0d0e51caffe767db42d3e6d69dbe211d1ca492ecf05908fe6fa625ad61b3253375ea744c9442dd5551613ba50aea",
+      "file": "/Path/To/Library/Bytom/keystore/UTC--2018-04-22T06-30-27.609315219Z--0e34293c-8856-4f5f-b934-37456a3820fa"
+  }
+]
 ```
 ## list-keys
 
@@ -51,12 +55,14 @@ none
     - `String`  - *alias* , 私钥的名字
     - `String` - *xpub*, 公钥
 #### 例子
-```php
-$client = BytomClient::listKeys();
-console_($client);
+```js
+const client = new bytom.Client(url, accessToken)
+var con = client.accounts.listAll();
+var sync = con.then((res) => console.log(res)) 
 ```
 ```json
-// Result
+$ node test.js
+//response
 [
   {
     "alias": "alice",
@@ -79,14 +85,15 @@ console_($client);
 #### 返回
 如果删除成功则返回none
 #### 例子
-```php
-$res = BytomClient::deleteKey($xpub, $password);//实例化一个删除对象
-$this->assertEquals(200, $res->getHTTPStatus());//获取请求网络状态，若为200则成功
-$client = $this->assertTrue($res->isSucceeded());
-console_($client)
+```js
+const keyPromise = client.keys.delete({          xpub:'a7dae957c2d35b42efe7e6871cf5a75ebd2a0d0e51caffe767db42d3e6d69dbe211d1ca492ecf05908fe6fa625ad61b3253375ea744c9442dd5551613ba50aea', 
+    password: '123456'
+   })
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```json
-// Result
+$ node test.js
+//response
 // none
 ```
 ##  reset-key-password
@@ -104,15 +111,16 @@ console_($client)
 - `Boolean` - *changed* ,判断重置密钥密码后的状态，若为success则返回true
 
 #### 例子
-```php
-$res = BytomClient::resetKeyPassword($xpub, $old_password, $new_password);
-$this->assertEquals(200, $res->getHTTPStatus());//获取请求网络状态，若为200则成功
-$client = $this->assertTrue($res->isSucceeded());
-console_($client)
+```js
+const keyPromise = client.keys.resetPassword({ 
+ xpub:'6add0a90da032fe9d13b006cc0161130f905cd9fe5539744eeedf09e5ccf263b362d6acbdff50751cd6ba7176093ba6a8e90e4ed3a3427a5d13973da749847b6', 
+    oldPassword: '123456',
+    newPassword:'234567'
+   })
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```json
-// Result
-{
-  "changed": true
-}
+$ node test.js
+//response
+{ changed: true }
 ```

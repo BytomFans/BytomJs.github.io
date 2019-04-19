@@ -18,11 +18,16 @@ sidebar_label: Bytom.Feed.API
 如果交易反馈已成功创建，返回none。
 
 #### 例子
-```php
-BytomClient::createTransactionFeed($alias, $filter);
+```js
+const keyPromise = client.feed.createFeed({
+    alias: 'test1', 
+    filter: "asset_id='84778a666fe453cf73b2e8c783dbc9e04bc4fd7cbb4f50caeaee99cf9967ebed' AND amount_lower_limit = 50 AND amount_upper_limit = 100"
+})
+var sync = keyPromise.then((res) => console.log(res))
 ```
 ```js
-// Result
+$ node test.js
+//response
 //none
 ```
 
@@ -55,16 +60,31 @@ BytomClient::createTransactionFeed($alias, $filter);
 #### 例子
 
 列出别名可用的txfeed：
-```php
-BytomClient::getTransactionFeed($alias);
+```js
+const keyPromise = client.feed.getFeed({
+    alias: 'test1'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-{
-  "alias": "test1",
-  "filter": "asset_id='84778a666fe453cf73b2e8c783dbc9e04bc4fd7cbb4f50caeaee99cf9967ebed' AND amount_lower_limit = 50 AND amount_upper_limit = 100",
-  "param": {}
+$ node test.js
+//response
+$ node test.js
+{ 
+    txfeed:
+   { 
+     alias: 'test1',
+     filter:'asset_id=\'84778a666fe453cf73b2e8c783dbc9e04bc4fd7cbb4f50caeaee99cf9967eb
+ed\' AND amount_lower_limit = 50 AND amount_upper_limit = 100',
+     param:
+    { 
+        assetid:'84778a666fe453cf73b2e8c783dbc9e04bc4fd7cbb4f50caeaee99cf9967ebed',
+        lowerlimit: 50,
+        upperlimit: 100 
+    } 
+   } 
 }
+
 ```
 
 ## list-transaction-feeds
@@ -96,11 +116,13 @@ none
 #### 例子
 
 列出所有可用的txfeed：
-```php
-BytomClient::listTransactionFeeds();
+```js
+const keyPromise = client.feed.listFeeds()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
+$ node test.js
+//response
 [
   {
     "alias": "test1",
@@ -128,12 +150,15 @@ BytomClient::listTransactionFeeds();
 如果交易反馈删除成功，则无返回.
 
 #### 例子
-```php
-BytomClient::deleteTransactionFeed($alias);
+```js
+const keyPromise = client.feed.deleteFeed({
+    alias: 'test1'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-//none
+$ node test.js
+//response
 ```
 
 ## update-transaction-feed
@@ -152,10 +177,14 @@ BytomClient::deleteTransactionFeed($alias);
 #### 例子
 
 当交易反馈存在的时候删除它，并使用别名和过滤器创建它:
-```php
-BytomClient::updateTransactionFeed($alias, $filter);
+```js
+const keyPromise = client.feed.updateFeed({
+    alias: 'test1', 
+    filter: "asset_id='84778a666fe453cf73b2e8c783dbc9e04bc4fd7cbb4f50caeaee99cf9967ebed' AND amount_lower_limit = 60 AND amount_upper_limit = 80"
+})
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-//none
+$ node test.js
+//response
 ```

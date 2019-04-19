@@ -30,28 +30,42 @@ sidebar_label: Bytom.Asset.API
 
 #### 例子
 
-```php
-BytomClient::createAsset($root_xpubs = [], $alias, $quorum = 1);
+```js
+const definition = {
+    name: "GOLD",
+    symbol: "GOLD",
+    decimals: 8,
+    description: {}
+  }  
+const keyPromise = client.assets.create({
+    alias: 'GOLD',
+    definition,
+    root_xpubs: ['f6a16704f745a168642712060e6c5a69866147e21ec2447ae628f87d756bb68cc9b91405ad0a95f004090e864fde472f62ba97053ea109837bc89d63a64040d5'],
+    quorum: 1
+    })
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 
 ```json
-// Result
-{
-  "id": "3c1cf4c9436e3f942cb2f1d70a584f1c61df3697698dacccdc89e46f46a003d0",
-  "alias": "GOLD",
-  "issuance_program": "766baa209683b893483c0a5a317bf9868a8e2a09691f8aa8c1f3e2a7bb62b157e76712e05151ad696c00c0",
-  "keys": [
-    {
-      "root_xpub": "f6a16704f745a168642712060e6c5a69866147e21ec2447ae628f87d756bb68cc9b91405ad0a95f004090e864fde472f62ba97053ea109837bc89d63a64040d5",
-      "asset_pubkey": "9683b893483c0a5a317bf9868a8e2a09691f8aa8c1f3e2a7bb62b157e76712e012bd443fa7d56a0627df0a29dffcdc52641672a0f5cba54d104ad76ebeb8dfc3",
-      "asset_derivation_path": [
-        "000200000000000000"
-      ]
-    }
-  ],
-  "quorum": 1,
-  "definition": {}
-}
+$ node test.js
+//response
+{ id:
+   '57ba2e10543e35f682d4e47729da3c6da0372a94b4c6d04fe59bd389e2e68edc',
+  alias: 'GOLD',
+  issuance_program:
+   'ae203fdd51e7622fc776b1841a0f45d6f82b65401bee9e2845ada193f94c3cda3e975151ad',
+  keys:
+   [ { root_xpub:
+        'f6a16704f745a168642712060e6c5a69866147e21ec2447ae628f87d756bb68cc9b9140
+5ad0a95f004090e864fde472f62ba97053ea109837bc89d63a64040d5',
+       asset_pubkey:
+        '3fdd51e7622fc776b1841a0f45d6f82b65401bee9e2845ada193f94c3cda3e97cb881ca
+aeec8c45b65abd8ff38623f1ec7e5fdca9eec7fd96c6c28cdf9d676d1',
+       asset_derivation_path: [Array] } ],
+  quorum: 1,
+  definition:
+   { decimals: 8, description: {}, name: 'GOLD', symbol: 'GOLD' } }
+
 ```
 
 ## get-asset
@@ -81,8 +95,11 @@ BytomClient::createAsset($root_xpubs = [], $alias, $quorum = 1);
 - `Object` - *definition*, 资产描述
 
 #### 例子
-```php
-BytomClient::getAsset($asset_id);
+```js
+const keyPromise = client.assets.list({
+    id:'57ba2e10543e35f682d4e47729da3c6da0372a94b4c6d04fe59bd389e2e68edc'
+    })
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 
 ```json
@@ -90,7 +107,7 @@ BytomClient::getAsset($asset_id);
 {
   "alias": "SILVER",
   "definition": null,
-  "id": "50ec80b6bc48073f6aa8fa045131a71213c33f3681203b15ddc2e4b81f1f4730",
+  "id": "57ba2e10543e35f682d4e47729da3c6da0372a94b4c6d04fe59bd389e2e68edc",
   "issue_program": "ae2029cd61d9ef31d40af7541f9a50831d6317fdb0870249d0564fcfa9a8f843589c5151ad",
   "key_index": 1,
   "quorum": 1,
@@ -127,8 +144,9 @@ none
 
 #### 例子
 
-```php
-BytomClient::listAssets();
+```js
+const keyPromise = client.assets.listAll()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 
 ```json
@@ -175,7 +193,7 @@ BytomClient::listAssets();
 #### 参数
 
 - `String` - *id*, 资产id
-- `String` - *alias*, 资产的新别名
+- `String` - *alias*, 资产的新别名，资产别名默认大写
 
 #### 返回
 
@@ -183,15 +201,18 @@ BytomClient::listAssets();
 
 ##### 例子
 
-```php
-BytomClient::updateAssetAlias($asset_id, $alias);
+```js
+const keyPromise = client.assets.updateAlias({
+    id:'57ba2e10543e35f682d4e47729da3c6da0372a94b4c6d04fe59bd389e2e68edc',
+    alias:'NEW_GOLD'
+    })
+var sync = keyPromise.then((res) => console.log(res)) const keyPromise =
 ```
 
 ```json
-// Request
-curl -X POST update-asset-alias -d '{"id":"50ec80b6bc48073f6aa8fa045131a71213c33f3681203b15ddc2e4b81f1f4730", "alias":"GOLD"}'
-
-// Result
+$ node test.js
+//response
+//none
 ```
 
 ## list-balances
@@ -216,10 +237,13 @@ none
 列出所有可用的帐户余额。
 
 ```js
-// Request
-curl -X POST list-balances -d {}
+const keyPromise = client.balances.listAll()
+var sync = keyPromise.then((res) => console.log(res)) 
+```
 
-// Result
+```js
+$ node test.js
+//response
 [
     {
       "account_alias": "default",
@@ -266,12 +290,14 @@ curl -X POST list-balances -d {}
 ##### 例子
 
 列出所有可用的未使用输出：
-```php
-BytomClient::listUnspentOutPuts($id);
+```js
+const keyPromise = client.unspentOutputs.listAll()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 
 ```json
-// Result
+$ node test.js
+//response
 [
   {
     "account_alias": "alice",
@@ -306,15 +332,15 @@ BytomClient::listUnspentOutPuts($id);
 ]
 ```
 列出与给定id匹配的未使用的输出：
-```php
-$id = "58f29f0f85f7bd2a91088bcbe536dee41cd0642dfb1480d3a88589bdbfd642d9"
-BytomClient::listUnspentOutPuts($id);
-```
 ```js
-// Request
-curl -X POST list-unspent-outputs -d '{"id": "58f29f0f85f7bd2a91088bcbe536dee41cd0642dfb1480d3a88589bdbfd642d9"}'
-
-// Result
+const keyPromise = client.unspentOutputs.list({
+    id:'58f29f0f85f7bd2a91088bcbe536dee41cd0642dfb1480d3a88589bdbfd642d9'
+})
+var sync = keyPromise.then((res) => console.log(res)) 
+```
+```json
+$ node test.js
+//response
 {
   "account_alias": "alice",
   "account_id": "0BKBR6VR00A06",

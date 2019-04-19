@@ -17,12 +17,14 @@ none
 - `Integer` - *gas_rate*, gas 费率.
 
 ##### 例子
-```php
-BytomClient::gasRate();
+```js
+const keyPromise = client.status.gasRate()
+var sync = keyPromise.then((res) => console.log(res)) 
 ```
 ```js
-// Result
-{
-  "gas_rate": 1000
+$ node test.js
+//response
+{ 
+    gas_rate: 200 
 }
 ```
