@@ -5,7 +5,7 @@ sidebar_label: SDK环境配置
 ---
 ## 下载bytom-js-sdk
 
-注意：所有教程你已经安装了node.js、npm的开发环境，以下我们提供两种方法来部署bytom-js-sdk到你的项目上。
+注意：所有教程默认你已经安装了node.js、npm的开发环境，以下我们提供两种方法来部署bytom-js-sdk到你的项目上。
 
 ### 使用npm安装依赖包
 
